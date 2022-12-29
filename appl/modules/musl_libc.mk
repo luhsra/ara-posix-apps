@@ -1,6 +1,6 @@
 
 # The path to the modded musl libc
-MUSL_LIB_C_SRC_PATH ?= ../../subprojects/musl-libc
+MUSL_LIB_C_SRC_PATH ?= ../subprojects/musl-libc
 
 # Directory of all C files that needs to be added to the musl libc.
 ADD_TO_MUSL_LIBC_SRC_DIR = _add_to_musl_libc

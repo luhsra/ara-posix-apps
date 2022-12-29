@@ -2,7 +2,7 @@
 # Built for version 0.9.73
 # Include this script after all applications using libmicrohttpd.
 
-LIBMICROHTTPD_DIR ?= ../../subprojects/libmicrohttpd
+LIBMICROHTTPD_DIR ?= ../subprojects/libmicrohttpd
 LIBMICROHTTPD_DIR := $(shell $(REALPATH) $(LIBMICROHTTPD_DIR))
 
 # Only execute configure if there is no Makefile in $(LIBMICROHTTPD_DIR)
