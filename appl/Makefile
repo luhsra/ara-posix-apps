@@ -46,12 +46,12 @@
 LLVM_VERSION ?= 10
 
 # Meson build root directory.
-BUILD_ROOT ?= ../../build
+BUILD_ROOT ?= ../build
 
 # All target and intermediate files will be saved in this directory.
 # Warning: The clean target will delete all files in this dir.
 # So make sure to set this var to a dir fully reserved for building with this Makefile.
-BUILD_DIR ?= $(BUILD_ROOT)/appl/POSIX
+BUILD_DIR ?= $(BUILD_ROOT)/appl
 
 ifeq "$(BUILD_DIR)" ""
 $(error BUILD_DIR variable is empty!)
@@ -138,6 +138,9 @@ LLVM_OPT ?= opt
 WLLVM ?= wllvm
 EXTRACT_BC ?= extract-bc
 CLANG ?= clang
+AUTOCONF ?= autoconf
+AUTOMAKE ?= automake
+MAKE_TOOL ?= make
 
 # Suffix for all LLVM programs. [the shell executes: <llvm-program>$(LLVM_SUFFIX)]
 # If "" not working than choose "-$(LLVM_VERSION)".
@@ -172,8 +175,8 @@ $(info command $(EXTRACT_BC) not found!)
 $(error wllvm tool (https://github.com/travitch/whole-program-llvm) is not installed! Install via "pip3 install wllvm")
 endif
 
-ifeq ($(call command_availiable,clang), false)
-$(error command clang not found!)
+ifeq ($(call command_availiable,$(CLANG)), false)
+$(error command $(CLANG) not found!)
 endif
 
 ifeq ($(call command_availiable,$(LLVM_DIS)), false)
@@ -196,18 +199,23 @@ ifeq ($(call command_availiable,$(REALPATH)), false)
 $(error command $(REALPATH) not found!)
 endif
 
-ifeq ($(call command_availiable,autoconf), false)
-$(error command autoconf not found!)
+ifeq ($(call command_availiable,$(AUTOCONF)), false)
+$(error command $(AUTOCONF) not found!)
 endif
 
-ifeq ($(call command_availiable,automake), false)
-$(error command automake not found!)
+ifeq ($(call command_availiable,$(AUTOMAKE)), false)
+$(error command $(AUTOMAKE) not found!)
+endif
+
+ifeq ($(call command_availiable,$(MAKE_TOOL)), false)
+$(error command $(MAKE_TOOL) not found!)
 endif
 
 # Make tools callable from build_makefile_app.sh and extract_llvm_ir.sh
 export LLVM_DIS
 export WLLVM
 export EXTRACT_BC
+export MAKE_TOOL
 
 SINGLE_FILE_APPLICATIONS := $(call list_filenames_of_dir,.c,.) $(call list_filenames_of_dir,.c,$(TEST_C_FILES))
 
@@ -323,7 +331,7 @@ clean-build-dir:
 clean-bin:
 	test -n "$(BIN_PATH)" && $(RM) -rf "$(BIN_PATH)"
 
-.PHONY: _default_rule all bin extra validate ll llvm-ir get-targets clean clean-bin clean-build-dir $(CLEAN_UP_TARGETS)
+.PHONY: _default_rule all bin extra validate ll llvm-ir get-targets clean clean-bin clean-build-dir get-appl-names $(CLEAN_UP_TARGETS)
 
 # Create test executables (to validate the correctness of the generated LLVM IR and to display linking errors from applications)
 $(BIN_TARGETS): $(BIN_PATH)/% : $(BUILD_DIR)/%.ll

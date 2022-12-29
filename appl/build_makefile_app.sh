@@ -25,6 +25,7 @@ readonly LLVM_COMPILER_PATH # The path to the compiler directory used by WLLVM. 
 #        WLLVM              # Command to execute wllvm [optional, default: "wllvm"]
 #        EXTRACT_BC         # Command to execute extract-bc [optional, default: "extract-bc"]
 #        LLVM_DIS           # Command to execute llvm-dis [optional, default: "llvm-dis"]
+#        MAKE_TOOL          # Command to execute make [optional, default: "make"]
 
 
 if [ "x${PROJECT_PATH}" = "x" ] || [ "x${BINARY_FILE}" = "x" ] || [ "x${OUTPUT_FILE}" = "x" ] ; then
@@ -52,6 +53,11 @@ if [ "x${LLVM_DIS}" = "x" ] ; then
 fi
 readonly LLVM_DIS
 
+if [ "x${MAKE_TOOL}" = "x" ] ; then
+    MAKE_TOOL="make"
+fi
+readonly MAKE_TOOL
+
 # Make sure that this file will be executed in the dir of that file
 cd "$(dirname "$0")" || exit 1
 
@@ -65,13 +71,13 @@ export LLVM_COMPILER=clang
 export LLVM_COMPILER_PATH
 if [ "${EXEC_CONFIGURE}" = "true" ] ; then
     (cd "${PROJECT_PATH}" && CC="${WLLVM}" WLLVM_CONFIGURE_ONLY=1 ./configure ${CONFIGURE_ARGS}) || exit 1
-    (cd "${PROJECT_PATH}" && make -j$(nproc) ${MAKE_ARGS}) || exit 1
+    (cd "${PROJECT_PATH}" && ${MAKE_TOOL} -j$(nproc) ${MAKE_ARGS}) || exit 1
 else
-    (cd "${PROJECT_PATH}" && make -j$(nproc) CC="${WLLVM}" ${MAKE_ARGS}) || exit 1
+    (cd "${PROJECT_PATH}" && ${MAKE_TOOL} -j$(nproc) CC="${WLLVM}" ${MAKE_ARGS}) || exit 1
 fi
 
 if ! [ "x${EXEC_MAKE_RULE}" = "x" ] ; then
-    (cd "${PROJECT_PATH}" && make ${EXEC_MAKE_RULE}) || exit 1
+    (cd "${PROJECT_PATH}" && ${MAKE_TOOL} ${EXEC_MAKE_RULE}) || exit 1
 fi
 
 # Extract LLVM IR code of ${BINARY_FILE}
