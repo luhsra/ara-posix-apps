@@ -46,17 +46,19 @@ posix_make_cust_target = custom_target('posix-make',
           build_by_default: true,
           command : posix_make_command + ['-j' + cpus])
 
+posix_apps_dict = {}
+
 # All musl libc linked llvm files 
 foreach appl : appl_list
-  target_name = 'posix_' + appl + '_musl'
-  posix_target = custom_target(target_name,
+  target_name = appl + '_musl'
+  posix_target = custom_target('posix_' + target_name,
                             output : [appl + '.ll'],
                               # Sadly, this is not working properly: (Meson executes all Make invocations parallel. We have no switch like is_parallel to deactivate this.)
                               # command : posix_make_command + ['-j' + cpus, target])
                             depends : posix_make_cust_target,
                             command : [nop.full_path()]) # Do nothing
 
-  set_variable(target_name, posix_target)
+  posix_apps_dict += {target_name: posix_target}
 endforeach
 
 subdir('objs')
