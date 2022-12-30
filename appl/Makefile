@@ -308,9 +308,7 @@ get-appl-names:
 	@OLD_APPL_LIST_CONTENT="$$( (cat appl_list.txt | tr '\n' ' ') | xargs )"; \
 	NEW_APPL_LIST_CONTENT="$(SINGLE_FILE_APPLICATIONS) $(PROJECT_NAMES) $(EXTRA_TARGET_NAMES)"; \
 	if [ "$${OLD_APPL_LIST_CONTENT}" != "$${NEW_APPL_LIST_CONTENT}" ]; then \
-		echo "$${OLD_APPL_LIST_CONTENT}"; \
-		echo "$${NEW_APPL_LIST_CONTENT}"; \
-		(echo "$${NEW_APPL_LIST_CONTENT}" | tr ' ' '\n') > appl_list.txt; \
+		(echo "$${NEW_APPL_LIST_CONTENT}" | tr ' ' '\n' | sort) > appl_list.txt; \
 	fi
 
 # Build everything (LLVM IR + Binary files)
