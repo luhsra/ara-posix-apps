@@ -2,6 +2,10 @@
 # The path to the modded musl libc
 MUSL_LIB_C_SRC_PATH ?= ../subprojects/musl-libc
 
+ifeq "$(wildcard $(MUSL_LIB_C_SRC_PATH) )" ""  # if path does not exists
+$(error musl libc in $(MUSL_LIB_C_SRC_PATH) not found! Updated submodules via ./init ?)
+endif
+
 # Directory of all C files that needs to be added to the musl libc.
 ADD_TO_MUSL_LIBC_SRC_DIR = _add_to_musl_libc
 

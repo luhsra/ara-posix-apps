@@ -268,11 +268,19 @@ include $(MAKE_INCLUDE_DIR)/no_musl_linkage_test_appl.mk
 include $(MAKE_INCLUDE_DIR)/simple_project.mk
 #include $(MAKE_INCLUDE_DIR)/patric_gbs_a5.mk
 #include $(MAKE_INCLUDE_DIR)/microhttpd_demo.mk
+
+LIBMICROHTTPD_DIR ?= ../subprojects/libmicrohttpd
+ifneq "$(wildcard $(LIBMICROHTTPD_DIR) )" ""  # if path exists
 include $(MAKE_INCLUDE_DIR)/microhttpd_fileserver_dirs.mk
 include $(MAKE_INCLUDE_DIR)/libmicrohttpd.mk
+endif
+
 # unmodified version:
+LIBMICROHTTPD_DIR_ORIG ?= ../subprojects/libmicrohttpd_orig
+ifneq "$(wildcard $(LIBMICROHTTPD_DIR_ORIG) )" ""  # if path exists
 include $(MAKE_INCLUDE_DIR)/microhttpd_fileserver_dirs_orig.mk
 include $(MAKE_INCLUDE_DIR)/libmicrohttpd_orig.mk
+endif
 
 # C++ Test
 #include $(MAKE_INCLUDE_DIR)/llvm_libcxx.mk
