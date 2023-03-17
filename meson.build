@@ -1,4 +1,4 @@
-project('posix', 'cpp',
+project('ara-posix-apps', 'cpp',
     default_options : ['warning_level=3',
                        'cpp_std=c++17',
                        'buildtype=debugoptimized'])
@@ -26,6 +26,8 @@ automake = find_program('automake', required: true)
 nproc = find_program('nproc', required: true)
 cat = find_program('cat', required: true)
 nop = find_program('true', required: true)
+objcopy = find_program('objcopy', required: true)
+awk = find_program('awk', required: true)
 
 ## ara-link
 ara_link = find_program('ara-link', version: llvm_version, required: false)

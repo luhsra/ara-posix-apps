@@ -16,7 +16,7 @@ ADD_TO_MUSL_LIBC_DEST_DIR = $(BUILD_DIR)/add_to_musl_libc
 MUSL_INSTALL_DIR := $(shell $(REALPATH) $(BUILD_DIR)/musl_install_dir)
 MUSL_INCLUDE_DIR := $(MUSL_INSTALL_DIR)/include/
 
-AWK_TO_ADD_TO_MUSL_TARGET = awk '{ print "$(ADD_TO_MUSL_LIBC_DEST_DIR)/" $$0 ".ll" }'
+AWK_TO_ADD_TO_MUSL_TARGET = $(AWK) '{ print "$(ADD_TO_MUSL_LIBC_DEST_DIR)/" $$0 ".ll" }'
 ADD_TO_MUSL_LIBC_CODE := $(call list_filenames_of_dir,.c,$(ADD_TO_MUSL_LIBC_SRC_DIR))
 
 # List of all targets that will be added to the musl libc.
@@ -34,7 +34,7 @@ $(BUILD_DIR)/musl_libc.ll: $(OBJ_BUILD)/musl_libc_original.ll $(ADD_TO_MUSL_LIBC
 $(ADD_TO_MUSL_LIBC_TARGETS): $(ADD_TO_MUSL_LIBC_DEST_DIR)/%.ll: $(ADD_TO_MUSL_LIBC_SRC_DIR)/%.c $(OBJ_BUILD)/musl_libc_original.ll
 	$(BUILD_TO_LLVM)
 
-REMOVE_LLVM_BC_ELF_SECTION = objcopy --remove-section .llvm_bc
+REMOVE_LLVM_BC_ELF_SECTION = $(OBJCOPY) --remove-section .llvm_bc
 
 # Build and install musl libc. 
 $(OBJ_BUILD)/musl_libc_original.ll: build_makefile_app.sh

@@ -14,7 +14,9 @@ posix_make_command = [make.full_path(), '-C', posix_src_dir,
                       'REALPATH=' + realpath.full_path(),
                       'AUTOCONF=' + autoconf.full_path(),
                       'AUTOMAKE=' + automake.full_path(),
-                      'MAKE_TOOL=' + make.full_path()]
+                      'MAKE_TOOL=' + make.full_path(),
+                      'OBJCOPY=' + objcopy.full_path(),
+                      'AWK=' + awk.full_path()]
 cpus = run_command(nproc.full_path(), check: true).stdout().split('\n')[0]
 
 # run target to invoke POSIX build Makefile (rule: all)

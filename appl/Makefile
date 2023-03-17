@@ -77,10 +77,23 @@ BIN_PATH := $(BUILD_DIR)/bin
 # Directory of all C files used in test cases. All files in this directory are single file applications.
 TEST_C_FILES = test_appl
 
+# Tools in use by this POSIX build script.
+LLVM_DIS ?= llvm-dis
+LLVM_LLC ?= llc
+LLVM_OPT ?= opt
+WLLVM ?= wllvm
+EXTRACT_BC ?= extract-bc
+CLANG ?= clang
+AUTOCONF ?= autoconf
+AUTOMAKE ?= automake
+MAKE_TOOL ?= make
+OBJCOPY ?= objcopy
+AWK ?= AWK
+
 # Tools
-AWK_TO_TARGET = awk '{ print "$(BUILD_DIR)/" $$0 ".ll" }'
-AWK_TO_BIN_TARGET = awk '{ print "$(BIN_PATH)/" $$0 }'
-AWK_TO_OBJS_TARGET = awk '{ print "$(OBJ_BUILD)/" $$0 ".ll" }'
+AWK_TO_TARGET = $(AWK) '{ print "$(BUILD_DIR)/" $$0 ".ll" }'
+AWK_TO_BIN_TARGET = $(AWK) '{ print "$(BIN_PATH)/" $$0 }'
+AWK_TO_OBJS_TARGET = $(AWK) '{ print "$(OBJ_BUILD)/" $$0 ".ll" }'
 
 # Creates the dest directory in a rule.
 # Just call this var at the beginning of the rule.
@@ -97,7 +110,7 @@ endef
 # The first prerequisite must be .c file.
 define BUILD_TO_LLVM
 @$(CREATE_DEST_DIR)
-$(CC) $(CFLAGS_TO_EMIT_LLVM) -o $@ $<
+$(CLANG) $(CFLAGS_TO_EMIT_LLVM) -o $@ $<
 endef
 
 # Function: do_for_all(list, shell_code) 
@@ -130,17 +143,6 @@ $(shell for file in $(2)/*$(1); do \
 			echo $$(basename $${file} | cut -f 1 -d '.'); \
 		done)
 endef
-
-# Tools in use by this POSIX build system.
-LLVM_DIS ?= llvm-dis
-LLVM_LLC ?= llc
-LLVM_OPT ?= opt
-WLLVM ?= wllvm
-EXTRACT_BC ?= extract-bc
-CLANG ?= clang
-AUTOCONF ?= autoconf
-AUTOMAKE ?= automake
-MAKE_TOOL ?= make
 
 # Suffix for all LLVM programs. [the shell executes: <llvm-program>$(LLVM_SUFFIX)]
 # If "" not working than choose "-$(LLVM_VERSION)".
@@ -209,6 +211,14 @@ endif
 
 ifeq ($(call command_availiable,$(MAKE_TOOL)), false)
 $(error command $(MAKE_TOOL) not found!)
+endif
+
+ifeq ($(call command_availiable,$(OBJCOPY)), false)
+$(error command $(OBJCOPY) not found!)
+endif
+
+ifeq ($(call command_availiable,$(AWK)), false)
+$(error command $(AWK) not found!)
 endif
 
 # Make tools callable from build_makefile_app.sh and extract_llvm_ir.sh
@@ -344,7 +354,7 @@ $(BIN_TARGETS): $(BIN_PATH)/% : $(BUILD_DIR)/%.ll
 	@$(CREATE_DEST_DIR)
 	$(LLVM_LLC) -filetype=obj -o $@.o $<
 	@# Add -lgcc to the linkage list if you get linker errors associated with compiler intrinsics.
-	$(CC) $(LDFLAGS_WITH_LLVM_TO_BIN) $@.o $(LINK_WITH_MUSL_BIN) -o $@
+	$(CLANG) $(LDFLAGS_WITH_LLVM_TO_BIN) $@.o $(LINK_WITH_MUSL_BIN) -o $@
 	$(RM) $@.o
 
 # Link all POSIX applications with musl libc
