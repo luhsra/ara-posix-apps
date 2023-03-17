@@ -28,6 +28,9 @@ readonly LLVM_COMPILER_PATH # The path to the compiler directory used by WLLVM. 
 #        MAKE_TOOL          # Command to execute make [optional, default: "make"]
 
 
+# Stop this script on error
+set -e
+
 if [ "x${PROJECT_PATH}" = "x" ] || [ "x${BINARY_FILE}" = "x" ] || [ "x${OUTPUT_FILE}" = "x" ] ; then
     echo "Missing argument(s)!"
     echo "Usage: (Set the required environment variables)"

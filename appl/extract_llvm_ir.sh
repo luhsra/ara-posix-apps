@@ -22,6 +22,9 @@ readonly EXTRACT_BC_ARGS   # Arguments to be applied to the WLLVM extract-bc too
 #        LLVM_DIS          # Command to execute llvm-dis [optional, default: "llvm-dis"]
 
 
+# Stop this script on error
+set -e
+
 if [ "x${BINARY_FILE}" = "x" ] || [ "x${OUTPUT_FILE}" = "x" ] ; then
     echo "Missing argument(s)!"
     echo "Usage: (Set the required environment variables)"
@@ -44,15 +47,9 @@ readonly LLVM_DIS
 # Make sure that this file will be executed in the dir of that file
 cd "$(dirname "$0")" || exit 1
 
-
-BITCODE_NAME=$(basename "${BINARY_FILE}" | cut -f 1 -d '.')
-if [ $? -gt 0 ] ; then
-    exit 1
-fi
-
 # Generate .bc bitcode
-${EXTRACT_BC} ${EXTRACT_BC_ARGS} -o "${BITCODE_NAME}".bc "${BINARY_FILE}" || exit 1
+${EXTRACT_BC} ${EXTRACT_BC_ARGS} -o "${OUTPUT_FILE}".bc "${BINARY_FILE}" || exit 1
 
 # Dissassemble .bc -> .ll
-${LLVM_DIS} -o "${OUTPUT_FILE}" "${BITCODE_NAME}".bc || exit 1
-rm "${BITCODE_NAME}".bc
+${LLVM_DIS} -o "${OUTPUT_FILE}" "${OUTPUT_FILE}".bc || exit 1
+rm "${OUTPUT_FILE}".bc
