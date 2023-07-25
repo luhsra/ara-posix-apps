@@ -1,0 +1,5 @@
+[wrap-git]
+directory = libmicrohttpd_orig
+url = git@scm.sra.uni-hannover.de:research/libmicrohttpd.git
+revision = posix
+depth = 1
