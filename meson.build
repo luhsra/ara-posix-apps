@@ -37,4 +37,8 @@ if not ara_link.found()
     message('Using ara-link from subproject.')
 endif
 
+## musl
+musl = subproject('musl-libc')
+musl_dir = musl.get_variable('musl_dir')
+
 subdir('appl')

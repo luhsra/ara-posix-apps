@@ -1,3 +1,4 @@
+subproject('musl-libc')
 
 posix_src_dir = meson.current_source_dir()
 posix_output_dir = meson.current_build_dir()
@@ -15,6 +16,7 @@ posix_make_command = [make.full_path(), '-C', posix_src_dir,
                       'AUTOCONF=' + autoconf.full_path(),
                       'AUTOMAKE=' + automake.full_path(),
                       'MAKE_TOOL=' + make.full_path(),
+                      'MUSL_LIB_C_SRC_PATH=' + musl_dir,
                       'OBJCOPY=' + objcopy.full_path(),
                       'AWK=' + awk.full_path()]
 cpus = run_command(nproc.full_path(), check: true).stdout().split('\n')[0]
