@@ -54,6 +54,7 @@ fileserver_example_dirs = custom_target('fileserver-example-dirs',
   input: [fileserver_example_dirs_raw, libmhd['ll'], musl_ll],
   command: llvm_link_cmd,
 )
+posix_apps += [{'name': 'libmicrohttpd', 'll': fileserver_example_dirs}]
 
 # original build
 libmhd_orig_build = meson.current_build_dir() / 'libmicrohttpd_orig_build'
@@ -87,3 +88,4 @@ fileserver_example_dirs_orig = custom_target('fileserver-example-dirs-orig',
   input: [fileserver_example_dirs_orig_raw, libmhd_orig['ll'], musl_ll],
   command: llvm_link_cmd,
 )
+posix_apps += [{'name': 'libmicrohttpd-orig', 'll': fileserver_example_dirs_orig}]

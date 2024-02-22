@@ -23,7 +23,7 @@ musl_ll = musl.get_variable('musl_ll')
 musl_clang = musl.get_variable('musl_clang')
 
 # fill apps
-posix_targets = []
+posix_apps = []
 subdir('appl')
 
 if get_option('build_libmicrohttpd')
@@ -31,6 +31,10 @@ if get_option('build_libmicrohttpd')
 endif
 
 posix_apps_tgt = 'posix-apps'
+posix_targets = []
+foreach app : posix_apps
+  posix_targets += [app['ll']]
+endforeach
 run_target(posix_apps_tgt,
   command: nop,
   depends: posix_targets,

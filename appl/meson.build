@@ -1,4 +1,4 @@
-posix_apps = [
+posix_sources = [
   {'name': 'filestream_read', 'with_musl': true},
   {'name': 'filestream_write', 'with_musl': true},
   {'name': 'funcpointer_issue', 'with_musl': true},
@@ -51,7 +51,7 @@ posix_apps = [
   {'name': 'test_appl' / 'no_musl_linkage' / 'linux_syscalls', 'with_musl': false},
 ]
 
-foreach app : posix_apps
+foreach app : posix_sources
   app_name = app['name'].underscorify()
   tgt = custom_target(app_name + '-raw',
     input: files(app['name'] + '.c'),
@@ -68,7 +68,7 @@ foreach app : posix_apps
       command: llvm_link_cmd,
     )
   endif
-  posix_targets += [with_musl]
+  posix_apps += [{'name': app_name, 'll': with_musl}]
   set_variable(app_name + '_ll', with_musl)
 endforeach
 

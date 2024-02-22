@@ -16,4 +16,4 @@ simple_project = custom_target('simple-project',
   command: llvm_link_cmd,
 )
 
-posix_targets += [simple_project]
+posix_apps += [{'name': 'simple-project', 'll': simple_project}]
