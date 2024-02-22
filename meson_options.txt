@@ -1,0 +1,5 @@
+# Parrot options
+option('build_gpslogger', type: 'boolean', value: true)
+option('build_librepilot', type: 'boolean', value: true)
+option('build_zephyr', type: 'boolean', value: true, description: 'Build sys_kernel and app_kernel related targets.')
+option('build_libmicrohttpd', type: 'boolean', value: true, yield: true, description: 'Build ll files for libmicrohttpd (in a modified and unmodified version.')

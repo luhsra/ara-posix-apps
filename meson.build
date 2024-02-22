@@ -3,42 +3,36 @@ project('ara-posix-apps', 'cpp',
                        'cpp_std=c++17',
                        'buildtype=debugoptimized'])
 
+fs = import('fs')
+
 ## llvm dependencies
 llvm_version = ['>=14', '<15']
 llvm_dep = dependency('llvm', method: 'config-tool', version: llvm_version, include_type: 'system')
 
-llvm_bindir = llvm_dep.get_variable(configtool: 'bindir')
-clang = find_program(llvm_bindir / 'clang', version: llvm_version)
-llc = find_program(llvm_bindir / 'llc', version: llvm_version)
-llvm_dis = find_program(llvm_bindir / 'llvm-dis', version: llvm_version)
-llvm_link = find_program(llvm_bindir / 'llvm-link', version: llvm_version)
-llvm_opt = find_program(llvm_bindir / 'opt', version: llvm_version)
+toolchains = subproject('toolchains')
+clang_c_to_ir_cmd = toolchains.get_variable('clang_c_to_ir_cmd')
+llvm_link_cmd = toolchains.get_variable('llvm_link_cmd')
 
-# wllvm
-wllvm = find_program('wllvm', required: true)
-extract_bc = find_program('extract-bc', required: true) # provided by wllvm
-
-# tools
-make = find_program('make', required: true)
-realpath = find_program('realpath', required: true)
-autoconf = find_program('autoconf', required: true)
-automake = find_program('automake', required: true)
-nproc = find_program('nproc', required: true)
-cat = find_program('cat', required: true)
 nop = find_program('true', required: true)
-objcopy = find_program('objcopy', required: true)
-awk = find_program('awk', required: true)
-
-## ara-link
-ara_link = find_program('ara-link', version: llvm_version, required: false)
-if not ara_link.found()
-    ara_link_proj = subproject('ara-link')
-    ara_link = ara_link_proj.get_variable('ara_link')
-    message('Using ara-link from subproject.')
-endif
 
 ## musl
 musl = subproject('musl-libc')
-musl_dir = musl.get_variable('musl_dir')
+# musl_dir = musl.get_variable('musl_dir')
+musl_include = musl.get_variable('musl_include')
+musl_ll = musl.get_variable('musl_ll')
+musl_clang = musl.get_variable('musl_clang')
 
+# fill apps
+posix_targets = []
 subdir('appl')
+
+if get_option('build_libmicrohttpd')
+  subdir('libmicrohttpd')
+endif
+
+posix_apps_tgt = 'posix-apps'
+run_target(posix_apps_tgt,
+  command: nop,
+  depends: posix_targets,
+)
+summary('Build all POSIX apps', 'meson compile ' + posix_apps_tgt)

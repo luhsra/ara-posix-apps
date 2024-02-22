@@ -1,0 +1,13 @@
+diff --git a/meson.build b/meson.build
+new file mode 100644
+index 0000000..4168b7c
+--- /dev/null
++++ b/meson.build
+@@ -0,0 +1,7 @@
++project('libmicrohttpd', 'c')
++
++fs = import('fs')
++
++src_dir = meson.current_source_dir()
++
++fileserver_example_dirs = fs.copyfile(src_dir / 'src' / 'examples' / 'fileserver_example_dirs.c', 'fileserver_example_dirs.c')

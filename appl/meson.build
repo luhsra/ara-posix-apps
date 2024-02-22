@@ -1,68 +1,75 @@
-subproject('musl-libc')
+posix_apps = [
+  {'name': 'filestream_read', 'with_musl': true},
+  {'name': 'filestream_write', 'with_musl': true},
+  {'name': 'funcpointer_issue', 'with_musl': true},
+  {'name': 'ospert_2022_example', 'with_musl': true},
+  {'name': 'pipe2_test', 'with_musl': true},
+  {'name': 'valueanalyzer_case_1', 'with_musl': true},
+  {'name': 'valueanalyzer_case_2', 'with_musl': true},
+  {'name': 'valueanalyzer_case_3', 'with_musl': true},
+  {'name': 'test_appl' / 'condition_var_broadcast', 'with_musl': true},
+  {'name': 'test_appl' / 'condition_variable', 'with_musl': true},
+  {'name': 'test_appl' / 'condition_var_initializer', 'with_musl': true},
+  {'name': 'test_appl' / 'create_everything', 'with_musl': true},
+  {'name': 'test_appl' / 'file_read', 'with_musl': true},
+  {'name': 'test_appl' / 'file_readv', 'with_musl': true},
+  {'name': 'test_appl' / 'filestream_open', 'with_musl': true},
+  {'name': 'test_appl' / 'file_write', 'with_musl': true},
+  {'name': 'test_appl' / 'file_writev', 'with_musl': true},
+  {'name': 'test_appl' / 'ignore_signal', 'with_musl': true},
+  {'name': 'test_appl' / 'instance_graph_stats', 'with_musl': true},
+  {'name': 'test_appl' / 'multiple_sigactions', 'with_musl': true},
+  {'name': 'test_appl' / 'mutex', 'with_musl': true},
+  {'name': 'test_appl' / 'mutex_counter', 'with_musl': true},
+  {'name': 'test_appl' / 'mutex_initializer', 'with_musl': true},
+  {'name': 'test_appl' / 'nanosleep', 'with_musl': true},
+  {'name': 'test_appl' / 'open_twice', 'with_musl': true},
+  {'name': 'test_appl' / 'open_two_files', 'with_musl': true},
+  {'name': 'test_appl' / 'pipe', 'with_musl': true},
+  {'name': 'test_appl' / 'pthread_cancel', 'with_musl': true},
+  {'name': 'test_appl' / 'pthread_create', 'with_musl': true},
+  {'name': 'test_appl' / 'pthread_detach', 'with_musl': true},
+  {'name': 'test_appl' / 'pthread_setname_np', 'with_musl': true},
+  {'name': 'test_appl' / 'semaphore', 'with_musl': true},
+  {'name': 'test_appl' / 'semaphore_ring_buffer', 'with_musl': true},
+  {'name': 'test_appl' / 'set_thread_attr', 'with_musl': true},
+  {'name': 'test_appl' / 'sigaction_macro_test', 'with_musl': true},
+  {'name': 'test_appl' / 'signal_handler', 'with_musl': true},
+  {'name': 'test_appl' / 'signal_handler_siginfo', 'with_musl': true},
+  {'name': 'test_appl' / 'sleep', 'with_musl': true},
+  {'name': 'test_appl' / 'system_profile_inheritance', 'with_musl': true},
+  {'name': 'test_appl' / 'thread_attr_cond_calls', 'with_musl': true},
+  {'name': 'test_appl' / 'thread_attr_double_call', 'with_musl': true},
+  {'name': 'test_appl' / 'thread_attr_inheritance', 'with_musl': true},
+  {'name': 'test_appl' / 'thread_attr_not_unique', 'with_musl': true},
+  {'name': 'test_appl' / 'thread_setname_cond_calls', 'with_musl': true},
+  {'name': 'test_appl' / 'wrong_call_in_sighandler', 'with_musl': true},
+  {'name': 'test_appl' / 'wrong_file_access', 'with_musl': true},
+  {'name': 'test_appl' / 'wrong_pipe_access', 'with_musl': true},
+  {'name': 'test_appl' / 'no_musl_linkage' / 'clang_global_var_dynamic', 'with_musl': false},
+  {'name': 'test_appl' / 'no_musl_linkage' / 'clang_global_var_static', 'with_musl': false},
+  {'name': 'test_appl' / 'no_musl_linkage' / 'linux_syscalls', 'with_musl': false},
+]
 
-posix_src_dir = meson.current_source_dir()
-posix_output_dir = meson.current_build_dir()
-posix_make_command = [make.full_path(), '-C', posix_src_dir,
-                      'BUILD_ROOT=' + meson.build_root(),
-                      'BUILD_DIR=' + posix_output_dir, 
-                      'ARA_LINK=' + ara_link.full_path(),
-                      'CLANG=' + clang.full_path(),
-                      'LLVM_DIS=' + llvm_dis.full_path(),
-                      'LLVM_LLC=' + llc.full_path(),
-                      'LLVM_OPT=' + llvm_opt.full_path(),
-                      'WLLVM=' + wllvm.full_path(),
-                      'EXTRACT_BC=' + extract_bc.full_path(),
-                      'REALPATH=' + realpath.full_path(),
-                      'AUTOCONF=' + autoconf.full_path(),
-                      'AUTOMAKE=' + automake.full_path(),
-                      'MAKE_TOOL=' + make.full_path(),
-                      'MUSL_LIB_C_SRC_PATH=' + musl_dir,
-                      'OBJCOPY=' + objcopy.full_path(),
-                      'AWK=' + awk.full_path()]
-cpus = run_command(nproc.full_path(), check: true).stdout().split('\n')[0]
-
-# run target to invoke POSIX build Makefile (rule: all)
-run_target('posix',
-  depends: ara_link,
-  command: posix_make_command + ['-j' + cpus])
-
-# run target to remove POSIX build generated files.
-run_target('posix-clean',
-  depends: ara_link,
-  command: posix_make_command + ['clean'])
-
-# run target to clear POSIX build directory.
-# This is useful if you want to rebuild all POSIX targets without rebuilding the musl libc.
-run_target('posix-clean-build-dir',
-  depends: ara_link,
-  command: posix_make_command + ['clean-build-dir'])
-
-
-# Get all target applications of Makefile
-appl_list = run_command(cat.full_path(), posix_src_dir / 'appl_list.txt', check: true).stdout().split()
-
-# Custom Target to execute the "all" Rule in Makefile.
-# This is a workaround to avoid Mesons parallel execution of multiple posix make targets.
-posix_make_cust_target = custom_target('posix-make',
-          output : ['musl_libc.ll'], # This output is irrelevant. We set build_always_stale to always execute the Makefile.
-          depends: ara_link,
-          build_always_stale : true,
-          build_by_default: true,
-          command : posix_make_command + ['-j' + cpus])
-
-posix_apps_dict = {}
-
-# All musl libc linked llvm files 
-foreach appl : appl_list
-  target_name = appl + '_musl'
-  posix_target = custom_target('posix_' + target_name,
-                            output : [appl + '.ll'],
-                              # Sadly, this is not working properly: (Meson executes all Make invocations parallel. We have no switch like is_parallel to deactivate this.)
-                              # command : posix_make_command + ['-j' + cpus, target])
-                            depends : posix_make_cust_target,
-                            command : [nop.full_path()]) # Do nothing
-
-  posix_apps_dict += {target_name: posix_target}
+foreach app : posix_apps
+  app_name = app['name'].underscorify()
+  tgt = custom_target(app_name + '-raw',
+    input: files(app['name'] + '.c'),
+    output: app_name + '.muslless.ll',
+    depfile: app_name + '_dep',
+    command: clang_c_to_ir_cmd + ['-I', musl_include['include']],
+    depends: musl_include['dep'],
+  )
+  with_musl = tgt
+  if app['with_musl']
+    with_musl = custom_target(app_name + '-with-musl',
+      input: [tgt, musl_ll],
+      output: app_name + '.ll',
+      command: llvm_link_cmd,
+    )
+  endif
+  posix_targets += [with_musl]
+  set_variable(app_name + '_ll', with_musl)
 endforeach
 
-subdir('objs')
+subdir('simple_project')
