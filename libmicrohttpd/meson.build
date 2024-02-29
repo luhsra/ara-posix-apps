@@ -14,6 +14,8 @@ llvm_objcopy = toolchains.get_variable('llvm_objcopy')
 gllvm_meson = subproject('gllvm-meson')
 get_bc = gllvm_meson.get_variable('get_bc')
 
+build_tools_env = gllvm_meson.get_variable('build_tools_env')
+
 py3_mod = import('python')
 py3_inst = py3_mod.find_installation('python3')
 
@@ -26,6 +28,7 @@ find_program('automake', required: true)
 libmhd_build = meson.current_build_dir() / 'libmicrohttpd_build'
 libmhd_bc = custom_target('libmhd-bc',
   output: 'libmicrohttpd.bc',
+  env: build_tools_env,
   command: [
     py3_inst, files('make_libmicrohttpd_bitcode.py'),
     '--build-dir', libmhd_build,
@@ -35,7 +38,7 @@ libmhd_bc = custom_target('libmhd-bc',
     '--get-bc-program', get_bc.full_path(),
     '--llvm-ld-program', llvm_ld.full_path(),
     '--llvm-objcopy-program', llvm_objcopy.full_path(),
-    '--bc-output', '@OUTPUT0@',
+    '--output', '@OUTPUT0@',
     '--gclang-program', musl_clang['bin'],
   ],
   depends: musl_clang['dep']
@@ -60,6 +63,7 @@ posix_apps += [{'name': 'libmicrohttpd', 'll': fileserver_example_dirs}]
 libmhd_orig_build = meson.current_build_dir() / 'libmicrohttpd_orig_build'
 libmhd_orig_bc = custom_target('libmhd-orig-bc',
   output: 'libmicrohttpd.orig.bc',
+  env: build_tools_env,
   command: [
     py3_inst, files('make_libmicrohttpd_bitcode.py'),
     '--build-dir', libmhd_orig_build,
@@ -69,7 +73,7 @@ libmhd_orig_bc = custom_target('libmhd-orig-bc',
     '--get-bc-program', get_bc.full_path(),
     '--llvm-ld-program', llvm_ld.full_path(),
     '--llvm-objcopy-program', llvm_objcopy.full_path(),
-    '--bc-output', '@OUTPUT0@',
+    '--output', '@OUTPUT0@',
     '--gclang-program', musl_clang['bin'],
   ],
   depends: musl_clang['dep']
