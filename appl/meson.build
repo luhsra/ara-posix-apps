@@ -57,7 +57,7 @@ foreach app : posix_sources
     input: files(app['name'] + '.c'),
     output: app_name + '.muslless.ll',
     depfile: app_name + '_dep',
-    command: clang_c_to_ir_cmd + ['-I', musl_include['include']],
+    command: clang_c_to_ir_cmd + ['-nostdinc', '-D_POSIX_C_SOURCE=200809L', '-I', musl_include['include']],
     depends: musl_include['dep'],
   )
   with_musl = tgt
