@@ -1,6 +1,6 @@
 posix_sources = [
-  {'name': 'filestream_read', 'with_musl': true},
-  {'name': 'filestream_write', 'with_musl': true},
+  # {'name': 'filestream_read', 'with_musl': true},  <- TODO, fread in musl leads to a function pointer to different syscalls, see musl/src/stdio/__toread.c
+  # {'name': 'filestream_write', 'with_musl': true},  <- TODO, fwrite is like fread, see musl/src/stdio/fwrite.c
   {'name': 'funcpointer_issue', 'with_musl': true},
   {'name': 'ospert_2022_example', 'with_musl': true},
   {'name': 'pipe2_test', 'with_musl': true},
