@@ -3,6 +3,7 @@ libmicrohttpd_orig_proj = subproject('libmicrohttpd-orig')
 
 libmhd_dir = libmicrohttpd_proj.get_variable('src_dir')
 fileserver_example_dirs_c = libmicrohttpd_proj.get_variable('fileserver_example_dirs')
+fp_translation_map = libmicrohttpd_proj.get_variable('fp_translation_map')
 
 libmhd_orig_dir = libmicrohttpd_proj.get_variable('src_dir')
 
@@ -26,8 +27,9 @@ find_program('automake', required: true)
 
 # adapted build
 libmhd_build = meson.current_build_dir() / 'libmicrohttpd_build'
+libmhd_fp_map = libmhd_build / 'function_pointer_translation_map.json'
 libmhd_bc = custom_target('libmhd-bc',
-  output: 'libmicrohttpd.bc',
+  output: 'libmicrohttpd.bc', # output should also be libmhd_fp_map, this is not possible in Meson currently
   env: build_tools_env,
   command: [
     py3_inst, files('make_libmicrohttpd_bitcode.py'),
@@ -40,6 +42,10 @@ libmhd_bc = custom_target('libmhd-bc',
     '--llvm-objcopy-program', llvm_objcopy.full_path(),
     '--output', '@OUTPUT0@',
     '--gclang-program', musl_clang['bin'],
+    # this could be done afterwards and with pure Meson, if fs.copyfile would support that
+    # see https://github.com/mesonbuild/meson/issues/12755
+    '--translation-map-input', fp_translation_map,
+    '--translation-map-output', libmhd_fp_map,
   ],
   depends: musl_clang['dep']
 )
@@ -61,7 +67,7 @@ fileserver_example_dirs = custom_target('fileserver-example-dirs',
 libmicrohttpd_app = {
   'name': 'libmicrohttpd',
   'll': fileserver_example_dirs,
-  'fp_corrections': [musl_corrections.full_path()],
+  'fp_corrections': [musl_corrections.full_path(), libmhd_fp_map],
 }
 
 # original build
