@@ -21,6 +21,7 @@ musl = subproject('musl-libc')
 musl_include = musl.get_variable('musl_include')
 musl_ll = musl.get_variable('musl_ll')
 musl_clang = musl.get_variable('musl_clang')
+musl_corrections = musl.get_variable('fp_corrections')
 
 # fill apps
 posix_apps = []
