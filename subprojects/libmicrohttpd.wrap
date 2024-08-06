@@ -3,4 +3,3 @@ directory = libmicrohttpd
 url = ssh://git@scm.sra.uni-hannover.de/research/libmicrohttpd.git
 revision = posix
 depth = 1
-diff_files = libmicrohttpd-add-meson.patch
