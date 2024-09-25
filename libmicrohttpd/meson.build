@@ -64,10 +64,20 @@ fileserver_example_dirs = custom_target('fileserver-example-dirs',
   command: llvm_link_cmd,
 )
 
+mhd_cloc_app = [
+  libmhd_dir / 'examples' / 'fileserver_example_dirs.c',
+  libmhd_dir / 'gnutls',
+  libmhd_dir / 'include',
+  libmhd_dir / 'lib',
+  libmhd_dir / 'microhttpd',
+  libmhd_dir / 'microhttpd_ws',
+]
+
 libmicrohttpd_app = {
   'name': 'libmicrohttpd',
   'll': fileserver_example_dirs,
   'fp_corrections': [musl_corrections.full_path(), libmhd_fp_map],
+  'cloc_app': mhd_cloc_app,
 }
 
 # original build
@@ -104,9 +114,19 @@ fileserver_example_dirs_orig = custom_target('fileserver-example-dirs-orig',
   command: llvm_link_cmd,
 )
 
+mhd_orig_cloc_app = [
+  libmhd_orig_dir / 'examples' / 'fileserver_example_dirs.c',
+  libmhd_orig_dir / 'gnutls',
+  libmhd_orig_dir / 'include',
+  libmhd_orig_dir / 'lib',
+  libmhd_orig_dir / 'microhttpd',
+  libmhd_orig_dir / 'microhttpd_ws',
+]
+
 warning('TODO: fileserver-example-dirs from libmicrohttpd uses getc etc in musl where syscalls are function pointers.')
 libmicrohttpd_orig_app = {
   'name': 'libmicrohttpd-orig',
   'll': fileserver_example_dirs_orig,
   'fp_corrections': [musl_corrections.full_path()],
+  'cloc_app': mhd_orig_cloc_app,
 }
