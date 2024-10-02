@@ -65,12 +65,12 @@ fileserver_example_dirs = custom_target('fileserver-example-dirs',
 )
 
 mhd_cloc_app = [
-  libmhd_dir / 'examples' / 'fileserver_example_dirs.c',
-  libmhd_dir / 'gnutls',
-  libmhd_dir / 'include',
-  libmhd_dir / 'lib',
-  libmhd_dir / 'microhttpd',
-  libmhd_dir / 'microhttpd_ws',
+  libmhd_dir / 'src' / 'examples' / 'fileserver_example_dirs.c',
+  libmhd_dir / 'src' / 'gnutls',
+  libmhd_dir / 'src' / 'include',
+  libmhd_dir / 'src' / 'lib',
+  libmhd_dir / 'src' / 'microhttpd',
+  libmhd_dir / 'src' / 'microhttpd_ws',
 ]
 
 libmicrohttpd_app = {
