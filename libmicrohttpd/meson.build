@@ -1,5 +1,5 @@
 libmicrohttpd_proj = subproject('libmicrohttpd')
-libmicrohttpd_orig_proj = subproject('libmicrohttpd-orig')
+libmicrohttpd_orig_proj = subproject('libmicrohttpd-orig', required: false)
 
 libmhd_dir = libmicrohttpd_proj.get_variable('src_dir')
 fileserver_example_dirs_c = libmicrohttpd_proj.get_variable('fileserver_example_dirs')
