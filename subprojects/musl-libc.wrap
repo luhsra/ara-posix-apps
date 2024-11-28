@@ -1,4 +1,4 @@
 [wrap-git]
-url = ssh://git@scm.sra.uni-hannover.de/research/musl.git
+url = ssh://git@scm.sra.uni-hannover.de/research/parrot-projects/musl.git
 revision = posix
 depth = 1
