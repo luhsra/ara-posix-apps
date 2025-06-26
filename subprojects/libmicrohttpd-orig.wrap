@@ -1,5 +1,5 @@
 [wrap-git]
 directory = libmicrohttpd_orig
-url = ssh://git@scm.sra.uni-hannover.de/research/parrot-projects/libmicrohttpd.git
-revision = master
+url = https://github.com/luhsra/libmicrohttpd.git
+revision = github
 depth = 1
