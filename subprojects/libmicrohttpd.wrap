@@ -1,5 +1,6 @@
 [wrap-git]
 directory = libmicrohttpd
 url = https://github.com/luhsra/libmicrohttpd.git
-revision = github
+revision = ospert25 
+
 depth = 1
